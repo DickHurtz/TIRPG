@@ -1,12 +1,15 @@
 function Dialogue_shitty_quest(withwho, part1, part2, part3){
 	var y = window.innerHeight * 0.25;
 	if(part1){
-		for(var i = 0; i < part1; i++){
+		for(i = 0; i < part1; i++){
 			drawText(Prosby[i], window.innerWidth / 4,y);
 			y+=30;
 			
-			document.onkeypress = function(answer){
-				if(answer.keyCode === 48 + i){ //1
+		}
+		document.onkeypress = function(answer){
+			for(i = 0; i < part1;){
+				i++;
+				if(answer.keyCode === 48 + i && Pause == true){ //1
 					ctx.fillStyle = '#fff';
 					ctx.fillRect(withwho.x, withwho.y - 30, 400, 40);
 					ctx.fillStyle = '#000';
