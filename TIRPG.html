@@ -95,6 +95,7 @@ var player = {
 	pressingUp:false,
 	pressingLeft:false,
 	pressingRight:false,
+	skill:0,
 };
 var aim = {
 	x:100,
@@ -361,42 +362,54 @@ HALT = function(someone){
 	someone.spdX = 0;
 	someone.spdY = 0;
 }
-Dialogue = function(type, withwho, options){
+Dialogue = function(type, withwho){
 	if(type == 0){
 		//niochem
 		var y = player.y;
-		for(i = 0; i < options; i++){
+		for(i = 0; i < 3; i++){
 			drawText(Prosby[i], player.x, y);
 			y+=30;
 		}
+		document.onkeypress = function(answer){
+			if(answer.keyCode === 49 && Pause == true){ //1
+				ctx.fillStyle = '#fff';
+				ctx.fillRect(withwho.x, withwho.y - 30, 400, 40);
+				ctx.fillStyle = '#000';
+				drawText(Pizdezh[Math.floor(Math.random() * ((Pizdezh.length - 2) - 0)) + 0], withwho.x, withwho.y);
+				setTimeout(function(){
+					Game = setInterval(update,40);
+					Pause = false;
+				},500);
+			}
+			else if( answer.keyCode === 50 && Pause == true){ //3
+				ctx.fillStyle = '#fff';
+				ctx.fillRect(withwho.x, withwho.y - 30, 400, 40);
+				ctx.fillStyle = '#000';
+				drawText(Pizdezh[Pizdezh.length-2], withwho.x, withwho.y);
+				setTimeout(function(){
+					Game = setInterval(update,40);
+					Pause = false;
+				},500);
+			}
+			else if(answer.keyCode === 51 && Pause == true ){ //3
+				ctx.fillStyle = '#fff';
+				ctx.fillRect(withwho.x, withwho.y - 30, 400, 40);
+				ctx.fillStyle = '#000';
+				drawText(Pizdezh[Pizdezh.length-1], withwho.x, withwho.y);
+				setTimeout(function(){
+					Game = setInterval(update,40);
+					Pause = false;
+					withwho.color = "red";
+					withwho.type = 1;
+				},500);
+			}
+		}
 	}
-	if(type == 1){
+	if(type == 2){
+		Dialogue_shitty_quest(withwho, 2, 2);
 		//shota
 	}
 	//...
-	document.onkeypress = function(answer){
-		if(answer.keyCode === 49 && Pause == true || answer.keyCode === 50 && Pause == true){ //1
-			ctx.fillStyle = '#fff';
-			ctx.fillRect(withwho.x, withwho.y - 30, 400, 40);
-			ctx.fillStyle = '#000';
-			drawText(Pizdezh[Math.floor(Math.random() * (3 - 0)) + 0], withwho.x, withwho.y);
-			setTimeout(function(){
-			Game = setInterval(update,40);
-			Pause = false;},1000);
-		}
-		else if(answer.keyCode === 51 && Pause == true ){ //3
-			ctx.fillStyle = '#fff';
-			ctx.fillRect(withwho.x, withwho.y - 30, 400, 40);
-			ctx.fillStyle = '#000';
-			drawText(Pizdezh[3], withwho.x, withwho.y);
-			setTimeout(function(){
-				Game = setInterval(update,40);
-				Pause = false;
-				withwho.color = "red";
-				withwho.type = 1;
-			},1000);
-		}
-	}
 }
 document.onclick = function(mouse){
 	if(player.attackCounter > 1){	//every 1 sec
@@ -505,11 +518,22 @@ update = function(){
 					break;
 				}
 				if(fagList[key2].type == 0 && bulletList[key].type == 0){
-					console.log("dialogue");
+					console.log("dialogue", Otvety, Object.keys(Otvety).length, Object.keys(Otvety.chaotic[0]));
 					drawText("XyJIe Te6e HaDo?",fagList[key2].x,fagList[key2].y);
+					delete bulletList[key];
 					clearInterval(Game);
 					Pause = true;
-					Dialogue(0, fagList[key2], 3);
+					Dialogue(fagList[key2].type, fagList[key2]);
+					break;
+				}
+				if(fagList[key2].type == 2 && bulletList[key].type == 0){
+					console.log("dialogue", Otvety, Object.keys(Otvety).length, Object.keys(Otvety.chaotic[0]));
+					drawText("Zdravstvuj pidor (suda randomnyi text)",window.innerWidth / 4,window.innerHeight * 0.75); //dobavić array z random nachalami dialogov
+					delete bulletList[key];
+					clearInterval(Game);
+					Pause = true;
+					Dialogue(fagList[key2].type, fagList[key2]); //suda dobavić questid
+					break;
 				}
 			}
 		}
@@ -543,7 +567,7 @@ update = function(){
 			}
 			var isColliding = testCollisionEntity(player,fagList[key]);
 			if(isColliding){
-				player.hp--;
+				player.hp++;
 			}
 		}
 	}
@@ -561,9 +585,9 @@ update = function(){
 	ctx.fillText(player.souls + " Souls",0,60);
 	ctx.fillText('Day: '+ day +' Time: ' + time,200,30);
 	
-	ctx.fillText('eto blyad RPG znachit delai 4o ho4esh, role play sooqa',10,120);
+	/*ctx.fillText('eto blyad RPG znachit delai 4o ho4esh, role play sooqa',10,120);
 	ctx.fillText('WASD begat, LKM pizdit debilov PKM kriknut debilu' ,10,150);
-	ctx.fillText('Zeloniy - eto ti, Seryiue debili - neutral, red debili - zlyie' ,10,180);
+	ctx.fillText('Zeloniy - eto ti, Seryiue debili - neutral, red debili - zlyie' ,10,180);*/
 }
 
 startNewGame = function(){
@@ -575,8 +599,14 @@ startNewGame = function(){
 	upgradeList = {};
 	bulletList = {};
 	tilesList = {};
+	randomlyGenerateFag(340, 260, 2);
+	randomlyGenerateFag(300, 260, 2);
 	randomlyGenerateFag(300, 300, 0);
-	randomlyGenerateFag(400, 300, 1);
+	randomlyGenerateFag(340, 300, 0);
+	randomlyGenerateFag(380, 300, 0);
+	randomlyGenerateFag(420, 300, 0);
+	randomlyGenerateFag(460, 300, 0);
+	randomlyGenerateFag(500, 300, 1);
 }
 
 startNewGame();
