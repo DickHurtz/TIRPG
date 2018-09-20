@@ -191,6 +191,8 @@ randomlyGenerateFag = function(ex,ey,type){
 	var type = type;
 	if(type == 1){
 		color = "red";
+	}else if(type == 2){
+		color = "yellow";
 	}else{
 		color = "gray";
 	}
@@ -406,7 +408,7 @@ Dialogue = function(type, withwho){
 		}
 	}
 	if(type == 2){
-		Dialogue_shitty_quest(withwho, 2, 2);
+		Dialogue_shitty_quest(withwho, 2, 3, 3);
 		//shota
 	}
 	//...
@@ -518,7 +520,7 @@ update = function(){
 					break;
 				}
 				if(fagList[key2].type == 0 && bulletList[key].type == 0){
-					console.log("dialogue", Otvety, Object.keys(Otvety).length, Object.keys(Otvety.chaotic[0]));
+					console.log("dialogue", Otvety, Object.keys(Otvety).length, Object.keys(Otvety.chaotic));
 					drawText("XyJIe Te6e HaDo?",fagList[key2].x,fagList[key2].y);
 					delete bulletList[key];
 					clearInterval(Game);
@@ -527,7 +529,7 @@ update = function(){
 					break;
 				}
 				if(fagList[key2].type == 2 && bulletList[key].type == 0){
-					console.log("dialogue", Otvety, Object.keys(Otvety).length, Object.keys(Otvety.chaotic[0]));
+					console.log("dialogue", Otvety, Object.keys(Otvety).length, Otvety["chaotic"][1], Otvety["chaotic"].length);
 					drawText("Zdravstvuj pidor (suda randomnyi text)",window.innerWidth / 4,window.innerHeight * 0.75); //dobavić array z random nachalami dialogov
 					delete bulletList[key];
 					clearInterval(Game);
@@ -585,9 +587,9 @@ update = function(){
 	ctx.fillText(player.souls + " Souls",0,60);
 	ctx.fillText('Day: '+ day +' Time: ' + time,200,30);
 	
-	/*ctx.fillText('eto blyad RPG znachit delai 4o ho4esh, role play sooqa',10,120);
+	ctx.fillText('eto blyad RPG znachit delai 4o ho4esh, role play sooqa',10,120);
 	ctx.fillText('WASD begat, LKM pizdit debilov PKM kriknut debilu' ,10,150);
-	ctx.fillText('Zeloniy - eto ti, Seryiue debili - neutral, red debili - zlyie' ,10,180);*/
+	ctx.fillText('Zeloniy - eto ti, Seryiue debili - neutral, red debili - zlyie, zieltie - questo debili' ,10,180);
 }
 
 startNewGame = function(){
@@ -600,7 +602,7 @@ startNewGame = function(){
 	bulletList = {};
 	tilesList = {};
 	randomlyGenerateFag(340, 260, 2);
-	randomlyGenerateFag(300, 260, 2);
+	randomlyGenerateFag(380, 260, 2);
 	randomlyGenerateFag(300, 300, 0);
 	randomlyGenerateFag(340, 300, 0);
 	randomlyGenerateFag(380, 300, 0);
